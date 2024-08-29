@@ -38,7 +38,7 @@ export const componentRouter = createTRPCRouter({
         where: eq(components.createdById, ctx.session.user.id),
         orderBy: desc(components.createdAt),
         limit: input.pageSize,
-        offset: ((input.page || 1) - 1) * (input.pageSize || 10),
+        offset: ((input.page ?? 1) - 1) * (input.pageSize ?? 10),
       });
 
       const total = await ctx.db

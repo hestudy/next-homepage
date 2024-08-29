@@ -28,7 +28,7 @@ const IFrameForm = (props: { onSuccess?: () => void }) => {
   });
 
   const componentCreateMutation = api.component.create.useMutation({
-    onSuccess(data, variables, context) {
+    onSuccess() {
       toast.success("Component created");
       props.onSuccess?.();
     },

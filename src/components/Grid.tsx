@@ -30,7 +30,7 @@ const Grid = () => {
   return (
     <div
       ref={(el) => {
-        setWidth(el?.clientWidth || 0);
+        setWidth(el?.clientWidth ?? 0);
       }}
     >
       <ReactGridLayout

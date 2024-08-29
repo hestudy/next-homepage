@@ -2,6 +2,7 @@ import { relations, sql } from "drizzle-orm";
 import {
   index,
   integer,
+  jsonb,
   pgTableCreator,
   primaryKey,
   serial,
@@ -129,3 +130,60 @@ export const verificationTokens = createTable(
     compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
   }),
 );
+
+export const components = createTable("component", {
+  id: varchar("id", { length: 255 })
+    .notNull()
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  type: varchar("type", { length: 256 }).notNull(),
+  data: jsonb("data"),
+  name: varchar("name", { length: 256 }).notNull(),
+  createdById: varchar("created_by", { length: 255 })
+    .notNull()
+    .references(() => users.id),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+});
+
+export const componentsRelations = relations(components, ({ one }) => ({
+  createdBy: one(users, {
+    fields: [components.createdById],
+    references: [users.id],
+  }),
+}));
+
+export const layouts = createTable("layout", {
+  id: varchar("id", { length: 255 })
+    .notNull()
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  createdById: varchar("created_by", { length: 255 })
+    .notNull()
+    .references(() => users.id),
+  i: varchar("component_id", { length: 255 })
+    .notNull()
+    .references(() => components.id),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
+    () => new Date(),
+  ),
+  w: integer("width").notNull(),
+  h: integer("height").notNull(),
+  x: integer("x").notNull(),
+  y: integer("y").notNull(),
+});
+
+export const layoutsRelations = relations(layouts, ({ one }) => ({
+  createdBy: one(users, {
+    fields: [layouts.createdById],
+    references: [users.id],
+  }),
+  component: one(components, {
+    fields: [layouts.i],
+    references: [components.id],
+  }),
+}));

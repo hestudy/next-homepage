@@ -3,6 +3,7 @@ import "@/styles/globals.css";
 import { type Metadata } from "next";
 import { Inter as FontSans } from "next/font/google";
 
+import { Toaster } from "@/components/ui/sonner";
 import { cn } from "@/lib/utils";
 import { TRPCReactProvider } from "@/trpc/react";
 
@@ -24,11 +25,12 @@ export default function RootLayout({
     <html lang="en" className="dark">
       <body
         className={cn(
-          "bg-background h-screen overflow-hidden font-sans antialiased",
+          "h-screen overflow-hidden bg-background font-sans antialiased",
           fontSans.variable,
         )}
       >
         <TRPCReactProvider>{children}</TRPCReactProvider>
+        <Toaster></Toaster>
       </body>
     </html>
   );

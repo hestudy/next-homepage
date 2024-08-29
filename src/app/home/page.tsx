@@ -21,12 +21,11 @@ const page = async () => {
     <ToolbarProvider>
       <div className="relative h-full overflow-y-auto [&::-webkit-scrollbar]:hidden">
         <div className="sticky top-0 h-[56px] bg-background/30 backdrop-blur">
-          <div className="container flex h-full items-center justify-between">
-            <div>demo</div>
-            <div>
+          <div className="container grid h-full grid-cols-3">
+            <div className="flex items-center">demo</div>
+            <div className="flex items-center justify-center">
               <Toolbar></Toolbar>
             </div>
-            <div></div>
           </div>
         </div>
         <div className="container">

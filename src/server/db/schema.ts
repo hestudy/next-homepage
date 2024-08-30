@@ -164,7 +164,8 @@ export const layouts = createTable("layout", {
     .references(() => users.id),
   i: varchar("component_id", { length: 255 })
     .notNull()
-    .references(() => components.id),
+    .references(() => components.id)
+    .unique(),
   createdAt: timestamp("created_at", { withTimezone: true })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),

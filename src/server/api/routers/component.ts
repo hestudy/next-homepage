@@ -1,5 +1,5 @@
-import { components } from "@/server/db/schema";
-import { count, desc, eq } from "drizzle-orm";
+import { components, layouts } from "@/server/db/schema";
+import { desc, eq } from "drizzle-orm";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
@@ -28,25 +28,26 @@ export const componentRouter = createTRPCRouter({
     }),
   list: protectedProcedure
     .input(
-      z.object({
-        page: z.number().optional(),
-        pageSize: z.number().optional(),
-      }),
+      z
+        .object({
+          filterNoLayout: z.boolean().optional(),
+        })
+        .optional(),
     )
     .query(async ({ ctx, input }) => {
-      const list = await ctx.db.query.components.findMany({
+      let list = await ctx.db.query.components.findMany({
         where: eq(components.createdById, ctx.session.user.id),
         orderBy: desc(components.createdAt),
-        limit: input.pageSize,
-        offset: ((input.page ?? 1) - 1) * (input.pageSize ?? 10),
       });
-
-      const total = await ctx.db
-        .select({ count: count() })
-        .from(components)
-        .where(eq(components.createdById, ctx.session.user.id));
-
-      return { list: list, totalCount: total };
+      if (input?.filterNoLayout) {
+        const layoutList = await ctx.db.query.layouts.findMany({
+          where: eq(layouts.createdById, ctx.session.user.id),
+        });
+        list = list.filter((component) => {
+          return !layoutList.some((layout) => layout.i === component.id);
+        });
+      }
+      return list;
     }),
   delete: protectedProcedure
     .input(z.object({ id: z.string() }))

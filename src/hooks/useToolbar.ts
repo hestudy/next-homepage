@@ -1,5 +1,5 @@
 import { ToolbarContext } from "@/components/ToolbarContext";
-import React, { useContext } from "react";
+import { useContext } from "react";
 
 const useToolbar = () => {
   const toolbarContext = useContext(ToolbarContext);

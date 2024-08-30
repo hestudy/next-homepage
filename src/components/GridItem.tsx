@@ -4,7 +4,7 @@ import { api } from "@/trpc/react";
 import * as Toolbar from "@radix-ui/react-toolbar";
 import { inferRouterOutputs } from "@trpc/server";
 import { useBoolean, useDebounceFn } from "ahooks";
-import { Grip, Trash } from "lucide-react";
+import { Grip, LockKeyhole, Trash } from "lucide-react";
 import { toast } from "sonner";
 import IFrame from "./IFrame";
 import { Button } from "./ui/button";
@@ -25,7 +25,7 @@ const GridItem = ({
 }: {
   item: inferRouterOutputs<AppRouter>["layout"]["list"][number];
 }) => {
-  const [show, showAc] = useBoolean(true);
+  const [cover, coverAc] = useBoolean(true);
   const { componentList, readonly, layoutList, noLayoutComponentList } =
     useToolbar();
 
@@ -49,7 +49,7 @@ const GridItem = ({
 
   const { run: setShow } = useDebounceFn(
     (value: boolean) => {
-      showAc.set(value);
+      coverAc.set(value);
     },
     {
       wait: 300,
@@ -99,15 +99,19 @@ const GridItem = ({
       )}
       <div
         className="relative h-0 flex-1"
-        onMouseEnter={() => {
-          setShow(false);
-        }}
         onMouseLeave={() => {
           setShow(true);
         }}
       >
-        {show && (
-          <div className="z-1 absolute inset-0 bg-gray-50 bg-opacity-10"></div>
+        {cover && (
+          <div
+            className="z-1 absolute inset-0 flex cursor-pointer items-center justify-center bg-gray-900/40"
+            onClick={() => {
+              coverAc.set(false);
+            }}
+          >
+            <LockKeyhole className="size-4" />
+          </div>
         )}
         {component?.type === "iframe" && (
           <IFrame data={component.data as any} />

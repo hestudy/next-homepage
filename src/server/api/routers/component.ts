@@ -1,5 +1,6 @@
 import { components, layouts } from "@/server/db/schema";
 import { desc, eq } from "drizzle-orm";
+import Parser from "rss-parser";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
@@ -13,6 +14,16 @@ export const componentRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ ctx, input }) => {
+      if (input.type === "rss") {
+        const res = await new Parser().parseURL(input.data.url);
+        if (!res.title) {
+          throw new Error("Invalid RSS feed");
+        }
+        input.data = {
+          ...input.data,
+          ...res,
+        };
+      }
       const component = await ctx.db
         .insert(components)
         .values({

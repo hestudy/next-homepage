@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 import IFrameForm from "./IFrameForm";
+import RssForm from "./RssForm";
 import { Badge } from "./ui/badge";
 import {
   CommandDialog,
@@ -99,6 +100,7 @@ const Toolbar = () => {
                 return (
                   <IFrameForm
                     onSuccess={() => {
+                      noLayoutComponentList?.refetch?.();
                       dialog.close();
                     }}
                   ></IFrameForm>
@@ -108,7 +110,22 @@ const Toolbar = () => {
           >
             IFrame
           </MenubarItem>
-          <MenubarItem>RSS</MenubarItem>
+          <MenubarItem
+            onClick={() => {
+              dialog.open(() => {
+                return (
+                  <RssForm
+                    onSuccess={() => {
+                      noLayoutComponentList?.refetch?.();
+                      dialog.close();
+                    }}
+                  ></RssForm>
+                );
+              });
+            }}
+          >
+            RSS
+          </MenubarItem>
         </MenubarContent>
       </MenubarMenu>
       <MenubarMenu>

@@ -1,7 +1,6 @@
 import { api } from "@/trpc/react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import useToolbar from "../hooks/useToolbar";
 import { Button } from "./ui/button";
 import {
   DialogDescription,
@@ -20,7 +19,7 @@ import {
 } from "./ui/form";
 import { Input } from "./ui/input";
 
-const IFrameForm = (props: { onSuccess?: () => void }) => {
+const RssForm = (props: { onSuccess?: () => void }) => {
   const form = useForm({
     defaultValues: {
       url: "",
@@ -28,19 +27,28 @@ const IFrameForm = (props: { onSuccess?: () => void }) => {
     },
   });
 
-  const componentCreateMutation = api.component.create.useMutation({
+  const createComponentMutation = api.component.create.useMutation({
     onSuccess() {
-      toast.success("Component created");
+      toast.success("Component created successfully");
       props.onSuccess?.();
+    },
+    onError(error) {
+      toast.error(error.message);
+    },
+    onMutate() {
+      toast.loading("Creating component...");
+    },
+    onSettled() {
+      toast.dismiss();
     },
   });
 
   return (
     <Form {...form}>
       <DialogHeader>
-        <DialogTitle>IFrame</DialogTitle>
+        <DialogTitle>RSS</DialogTitle>
         <DialogDescription>
-          Add an IFrame to your page to embed another website.
+          Add an RSS feed to your page to embed another website.
         </DialogDescription>
       </DialogHeader>
       <FormField
@@ -56,21 +64,20 @@ const IFrameForm = (props: { onSuccess?: () => void }) => {
               <FormControl>
                 <Input {...field}></Input>
               </FormControl>
-              <FormDescription>The name of the component.</FormDescription>
+              <FormDescription>The name of the RSS feed.</FormDescription>
               <FormMessage></FormMessage>
             </FormItem>
           );
         }}
-      ></FormField>
+      />
       <FormField
         control={form.control}
         name="url"
         rules={{
           required: "URL is required",
           pattern: {
-            value:
-              /^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/i,
-            message: "Invalid URL",
+            value: /^https?:\/\//,
+            message: "URL must start with http:// or https://",
           },
         }}
         render={({ field }) => {
@@ -80,35 +87,31 @@ const IFrameForm = (props: { onSuccess?: () => void }) => {
               <FormControl>
                 <Input {...field}></Input>
               </FormControl>
-              <FormDescription>
-                The URL of the website you want to embed.
-              </FormDescription>
+              <FormDescription>The URL of the RSS feed.</FormDescription>
               <FormMessage></FormMessage>
             </FormItem>
           );
         }}
-      ></FormField>
+      />
       <DialogFooter>
         <Button
-          disabled={componentCreateMutation.isPending}
-          onClick={async () => {
-            if (await form.trigger()) {
-              const { name, ...rest } = form.getValues();
-              componentCreateMutation.mutate({
-                type: "iframe",
-                data: {
-                  ...rest,
-                },
-                name,
-              });
-            }
+          disabled={createComponentMutation.isPending}
+          onClick={() => {
+            const { name, ...rest } = form.getValues();
+            createComponentMutation.mutate({
+              type: "rss",
+              data: {
+                ...rest,
+              },
+              name,
+            });
           }}
         >
-          save
+          Create
         </Button>
       </DialogFooter>
     </Form>
   );
 };
 
-export default IFrameForm;
+export default RssForm;

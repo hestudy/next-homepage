@@ -10,18 +10,14 @@ type RouterOutput = inferRouterOutputs<AppRouter>;
 export const ToolbarContext = createContext<{
   readonly?: boolean;
   setReadOnly?: (readonly?: boolean) => void;
-  componentList?: Partial<
-    ReturnType<
-      typeof api.component.list.useQuery<RouterOutput["component"]["list"]>
-    >
+  componentList?: ReturnType<
+    typeof api.component.list.useQuery<RouterOutput["component"]["list"]>
   >;
-  noLayoutComponentList?: Partial<
-    ReturnType<
-      typeof api.component.list.useQuery<RouterOutput["component"]["list"]>
-    >
+  noLayoutComponentList?: ReturnType<
+    typeof api.component.list.useQuery<RouterOutput["component"]["list"]>
   >;
-  layoutList?: Partial<
-    ReturnType<typeof api.layout.list.useQuery<RouterOutput["layout"]["list"]>>
+  layoutList?: ReturnType<
+    typeof api.layout.list.useQuery<RouterOutput["layout"]["list"]>
   >;
 }>({});
 

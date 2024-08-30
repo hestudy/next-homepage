@@ -1,6 +1,7 @@
 import { api } from "@/trpc/react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import useToolbar from "../hooks/useToolbar";
 import { Button } from "./ui/button";
 import {
   DialogDescription,
@@ -20,6 +21,7 @@ import {
 import { Input } from "./ui/input";
 
 const IFrameForm = (props: { onSuccess?: () => void }) => {
+  const { noLayoutComponentList } = useToolbar();
   const form = useForm({
     defaultValues: {
       url: "",
@@ -29,6 +31,7 @@ const IFrameForm = (props: { onSuccess?: () => void }) => {
 
   const componentCreateMutation = api.component.create.useMutation({
     onSuccess() {
+      noLayoutComponentList?.refetch?.();
       toast.success("Component created");
       props.onSuccess?.();
     },

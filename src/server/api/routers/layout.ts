@@ -1,5 +1,5 @@
 import { layouts } from "@/server/db/schema";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "../trpc";
 
@@ -42,4 +42,30 @@ export const layoutRouter = createTRPCRouter({
       .where(eq(layouts.createdById, ctx.session.user.id));
     return list;
   }),
+  resize: protectedProcedure
+    .input(z.object({ i: z.string(), w: z.number(), h: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db
+        .update(layouts)
+        .set({ w: input.w, h: input.h })
+        .where(
+          and(
+            eq(layouts.createdById, ctx.session.user.id),
+            eq(layouts.i, input.i),
+          ),
+        );
+    }),
+  reorder: protectedProcedure
+    .input(z.object({ i: z.string(), x: z.number(), y: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.db
+        .update(layouts)
+        .set({ x: input.x, y: input.y })
+        .where(
+          and(
+            eq(layouts.createdById, ctx.session.user.id),
+            eq(layouts.i, input.i),
+          ),
+        );
+    }),
 });

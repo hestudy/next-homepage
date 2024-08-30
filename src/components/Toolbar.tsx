@@ -35,10 +35,10 @@ const Toolbar = () => {
 
   const layoutCreateMutation = api.layout.create.useMutation({
     onSuccess() {
-      noLayoutComponentList?.refetch();
+      noLayoutComponentList?.refetch?.();
       setOpen(false);
       toast.success("Created");
-      layoutList?.refetch();
+      layoutList?.refetch?.();
     },
     onMutate() {
       toast.loading("Creating...");
@@ -64,8 +64,8 @@ const Toolbar = () => {
                   onSelect={() => {
                     layoutCreateMutation.mutate({
                       i: item.id,
-                      w: 2,
-                      h: 2,
+                      w: 4,
+                      h: 10,
                       x: 0,
                       y: 0,
                     });

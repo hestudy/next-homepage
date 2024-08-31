@@ -117,7 +117,9 @@ const GridItem = ({
         {component?.type === "iframe" && (
           <IFrame data={component.data as any} />
         )}
-        {component?.type === "rss" && <Rss data={component.data as any} />}
+        {component?.type === "rss" && (
+          <Rss id={component.id} data={component.data as any} />
+        )}
       </div>
     </div>
   );

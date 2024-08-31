@@ -23,6 +23,7 @@ const config = {
     "@typescript-eslint/no-empty-object-type": "off",
     "@typescript-eslint/no-unsafe-argument": "off",
     "@typescript-eslint/consistent-indexed-object-style": "off",
+    "@typescript-eslint/no-unsafe-member-access": "off",
     "@typescript-eslint/no-misused-promises": [
       "error",
       {

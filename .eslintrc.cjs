@@ -21,6 +21,8 @@ const config = {
     "@typescript-eslint/no-unused-vars": "off",
     "@typescript-eslint/require-await": "off",
     "@typescript-eslint/no-empty-object-type": "off",
+    "@typescript-eslint/no-unsafe-argument": "off",
+    "@typescript-eslint/consistent-indexed-object-style": "off",
     "@typescript-eslint/no-misused-promises": [
       "error",
       {

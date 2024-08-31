@@ -19,6 +19,7 @@ import {
   DialogTrigger,
 } from "./ui/dialog";
 import { Label } from "./ui/label";
+import Rss from "./Rss";
 
 const GridItem = ({
   item,
@@ -105,7 +106,7 @@ const GridItem = ({
       >
         {cover && (
           <div
-            className="z-1 absolute inset-0 flex cursor-pointer items-center justify-center bg-gray-900/40"
+            className="absolute inset-0 z-10 flex cursor-pointer items-center justify-center bg-gray-900/40"
             onClick={() => {
               coverAc.set(false);
             }}
@@ -116,6 +117,7 @@ const GridItem = ({
         {component?.type === "iframe" && (
           <IFrame data={component.data as any} />
         )}
+        {component?.type === "rss" && <Rss data={component.data as any} />}
       </div>
     </div>
   );

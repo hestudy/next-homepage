@@ -13,7 +13,7 @@ const Rss = (props: {
 }) => {
   const [data, setData] = useState(props.data);
 
-  const rssReq = api.component.fetchRss.useQuery(
+  const rssReq = api.util.fetchRss.useQuery(
     { id: props.id },
     {
       refetchInterval: 1000 * 60 * 5,

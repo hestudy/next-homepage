@@ -7,6 +7,8 @@ import { useBoolean, useDebounceFn } from "ahooks";
 import { Grip, LockKeyhole, Trash } from "lucide-react";
 import { toast } from "sonner";
 import IFrame from "./IFrame";
+import LinkComponent from "./LinkComponent";
+import Rss from "./Rss";
 import { Button } from "./ui/button";
 import {
   Dialog,
@@ -19,7 +21,8 @@ import {
   DialogTrigger,
 } from "./ui/dialog";
 import { Label } from "./ui/label";
-import Rss from "./Rss";
+
+const noLockTypes = ["link"];
 
 const GridItem = ({
   item,
@@ -58,10 +61,10 @@ const GridItem = ({
   );
 
   return (
-    <div className="flex h-full w-full flex-col p-2 [&>*]:shrink-0">
+    <div className="relative flex h-full w-full flex-col [&>*]:shrink-0">
       {!readonly && (
         <>
-          <Toolbar.Root className="mb-2 flex space-x-1">
+          <Toolbar.Root className="absolute left-0 top-0 z-10 flex w-full space-x-1 bg-background/50 p-1 backdrop-blur">
             <Label>{component?.name}</Label>
             <div className="flex-1"></div>
             <Dialog>
@@ -98,27 +101,40 @@ const GridItem = ({
           </Toolbar.Root>
         </>
       )}
-      <div
-        className="relative h-0 flex-1"
-        onMouseLeave={() => {
-          setShow(true);
-        }}
-      >
-        {cover && (
-          <div
-            className="absolute inset-0 z-10 flex cursor-pointer items-center justify-center bg-gray-900/40"
-            onClick={() => {
-              coverAc.set(false);
-            }}
-          >
-            <LockKeyhole className="size-4" />
-          </div>
+      <div className="relative h-0 flex-1">
+        {!noLockTypes.includes(component?.type ?? "") && (
+          <>
+            {cover && (
+              <div
+                className="absolute inset-0 z-10 flex cursor-pointer items-center justify-center bg-gray-900/40"
+                onClick={() => {
+                  coverAc.set(false);
+                }}
+              >
+                <LockKeyhole className="size-4" />
+              </div>
+            )}
+            {!cover && (
+              <div
+                className="z-1 absolute right-0 top-0 cursor-pointer rounded bg-background/50 p-1 backdrop-blur"
+                onClick={() => {
+                  coverAc.set(true);
+                }}
+              >
+                <LockKeyhole className="size-4" />
+              </div>
+            )}
+          </>
         )}
+
         {component?.type === "iframe" && (
           <IFrame data={component.data as any} />
         )}
         {component?.type === "rss" && (
           <Rss id={component.id} data={component.data as any} />
+        )}
+        {component?.type === "link" && (
+          <LinkComponent data={component.data as any} />
         )}
       </div>
     </div>

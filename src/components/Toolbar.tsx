@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
 import IFrameForm from "./IFrameForm";
+import LinkForm from "./LinkForm";
 import RssForm from "./RssForm";
 import { Badge } from "./ui/badge";
 import {
@@ -29,13 +30,19 @@ import {
 import { Toggle } from "./ui/toggle";
 
 const Toolbar = () => {
-  const { readonly, setReadOnly, noLayoutComponentList, layoutList } =
-    useToolbar();
+  const {
+    readonly,
+    setReadOnly,
+    noLayoutComponentList,
+    layoutList,
+    componentList,
+  } = useToolbar();
   const { el, dialog } = useDialog();
   const [open, setOpen] = useState(false);
 
   const layoutCreateMutation = api.layout.create.useMutation({
     onSuccess() {
+      componentList?.refetch?.();
       noLayoutComponentList?.refetch?.();
       setOpen(false);
       toast.success("Created");
@@ -125,6 +132,22 @@ const Toolbar = () => {
             }}
           >
             RSS
+          </MenubarItem>
+          <MenubarItem
+            onClick={() => {
+              dialog.open(() => {
+                return (
+                  <LinkForm
+                    onSuccess={() => {
+                      noLayoutComponentList?.refetch?.();
+                      dialog.close();
+                    }}
+                  ></LinkForm>
+                );
+              });
+            }}
+          >
+            Link
           </MenubarItem>
         </MenubarContent>
       </MenubarMenu>

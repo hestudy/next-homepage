@@ -78,28 +78,4 @@ export const componentRouter = createTRPCRouter({
         .set(input.data)
         .where(eq(components.id, input.id));
     }),
-  fetchRss: protectedProcedure
-    .input(z.object({ id: z.string() }))
-    .query(async ({ input, ctx }) => {
-      const component = await ctx.db.query.components.findFirst({
-        where: eq(components.id, input.id),
-      });
-      if (!component) {
-        throw new Error("Component not found");
-      }
-      const res = await new Parser().parseURL((component.data as any).url);
-      if (!res.title) {
-        throw new Error("Invalid RSS feed");
-      }
-      await ctx.db
-        .update(components)
-        .set({
-          data: {
-            ...(component.data as any),
-            ...res,
-          },
-        })
-        .where(eq(components.id, input.id));
-      return res;
-    }),
 });

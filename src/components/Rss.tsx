@@ -46,9 +46,14 @@ const Rss = (props: {
       <ScrollArea className="h-full">
         {data.items.map((item) => {
           return (
-            <div key={item.guid}>
+            <div
+              key={item.guid}
+              className="border-b p-2 hover:bg-background/50"
+            >
               <Link href={item.link ?? ""} target="_blank">
-                <div className="border-b py-2 text-base">{item.title}</div>
+                <div className="leading-1 py-1 text-sm font-medium">
+                  {item.title}
+                </div>
               </Link>
             </div>
           );

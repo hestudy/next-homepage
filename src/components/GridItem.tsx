@@ -4,6 +4,7 @@ import { api } from "@/trpc/react";
 import * as Toolbar from "@radix-ui/react-toolbar";
 import { inferRouterOutputs } from "@trpc/server";
 import { useBoolean } from "ahooks";
+import { AnimatePresence, motion } from "framer-motion";
 import { Grip, LockKeyhole, Trash } from "lucide-react";
 import { toast } from "sonner";
 import IFrame from "./IFrame";
@@ -21,7 +22,6 @@ import {
   DialogTrigger,
 } from "./ui/dialog";
 import { Label } from "./ui/label";
-import { AnimatePresence, motion } from "framer-motion";
 
 const noLockTypes = ["link"];
 
@@ -122,9 +122,6 @@ const GridItem = ({
                 }}
                 animate={{
                   opacity: 1,
-                }}
-                exit={{
-                  opacity: 0,
                 }}
                 transition={{
                   type: "spring",
